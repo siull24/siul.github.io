@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Plataforma de Gestão de Consultas</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Gestão de Consultas</h1>
+    <div id="user-info" class="hidden">
+      <span id="user-greeting"></span>
+      <button id="btn-logout">Sair</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Login -->
+    <section id="login-section" class="card">
+      <h2>Entrar</h2>
+      <form id="login-form">
+        <label>
+          Utilizador
+          <input type="text" id="login-username" required />
+        </label>
+        <label>
+          Palavra-passe
+          <input type="password" id="login-password" required />
+        </label>
+        <div class="row">
+          <button type="submit" class="btn">Entrar</button>
+          <button type="button" id="btn-demo" class="btn ghost">Conta de demonstração</button>
+        </div>
+      </form>
+      <p class="muted">Contas demo: <b>admin/admin123</b> (Admin) • <b>cliente/cliente123</b> (Cliente)</p>
+    </section>
+
+    <!-- App -->
+    <section id="app-section" class="hidden">
+      <div class="layout">
+        <aside class="card sidebar">
+          <h3>Menu</h3>
+          <nav>
+            <button id="nav-dashboard" class="nav-btn active">Dashboard</button>
+            <button id="nav-book" class="nav-btn">Marcar Consulta</button>
+            <button id="nav-my" class="nav-btn">Minhas Consultas</button>
+            <button id="nav-admin" class="nav-btn hidden">Admin (Todas Consultas)</button>
+            <button id="nav-users" class="nav-btn hidden">Utilizadores</button>
+            <hr />
+            <button id="btn-export" class="btn small">Exportar JSON</button>
+            <label class="file-import small">
+              Importar JSON
+              <input type="file" id="import-file" accept="application/json" />
+            </label>
+          </nav>
+        </aside>
+
+        <section class="card content" id="content-area">
+          <!-- Dashboard -->
+          <div id="dashboard-view">
+            <h2>Dashboard</h2>
+            <div class="grid stats">
+              <div class="stat">
+                <h3 id="stat-total">0</h3>
+                <p>Total consultas</p>
+              </div>
+              <div class="stat">
+                <h3 id="stat-today">0</h3>
+                <p>Consultas hoje</p>
+              </div>
+              <div class="stat">
+                <h3 id="stat-upcoming">0</h3>
+                <p>Próximas 7 dias</p>
+              </div>
+            </div>
+
+            <h3>Próximas consultas</h3>
+            <ul id="upcoming-list" class="list"></ul>
+          </div>
+
+          <!-- Booking -->
+          <div id="book-view" class="hidden">
+            <h2>Marcar Consulta</h2>
+            <form id="booking-form">
+              <label>
+                Tipo (Ex: Cabelo, Consulta)
+                <input type="text" id="booking-type" placeholder="Serviço" required />
+              </label>
+
+              <label>
+                Data
+                <input type="date" id="booking-date" required />
+              </label>
+
+              <label>
+                Hora
+                <input type="time" id="booking-time" required />
+              </label>
+
+              <label>
+                Observações
+                <textarea id="booking-notes" rows="2" placeholder="Opcional"></textarea>
+              </label>
+
+              <div class="row">
+                <button type="submit" class="btn">Marcar</button>
+                <button type="button" id="btn-clear" class="btn ghost">Limpar</button>
+              </div>
+            </form>
+
+            <h3>Horários marcados nesta data</h3>
+            <ul id="booked-times" class="list"></ul>
+          </div>
+
+          <!-- My appointments -->
+          <div id="my-view" class="hidden">
+            <h2>Minhas Consultas</h2>
+            <ul id="my-list" class="list"></ul>
+          </div>
+
+          <!-- Admin view -->
+          <div id="admin-view" class="hidden">
+            <h2>Gestão — Todas as Consultas</h2>
+            <label>
+              Filtrar por data:
+              <input type="date" id="admin-filter-date" />
+            </label>
+            <label>
+              Filtrar por utilizador:
+              <input type="text" id="admin-filter-user" placeholder="username" />
+            </label>
+            <div class="row">
+              <button id="btn-filter-admin" class="btn small">Aplicar filtros</button>
+              <button id="btn-clear-admin-filters" class="btn small ghost">Limpar</button>
+            </div>
+            <ul id="admin-list" class="list"></ul>
+          </div>
+
+          <!-- Users management (admin) -->
+          <div id="users-view" class="hidden">
+            <h2>Utilizadores</h2>
+            <form id="user-create-form" class="small-form">
+              <label>
+                Username
+                <input id="new-username" required />
+              </label>
+              <label>
+                Palavra-passe
+                <input id="new-password" required />
+              </label>
+              <label>
+                Papel
+                <select id="new-role">
+                  <option value="cliente">Cliente</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </label>
+              <div class="row">
+                <button type="submit" class="btn small">Criar</button>
+              </div>
+            </form>
+
+            <h3>Lista de utilizadores</h3>
+            <ul id="users-list" class="list"></ul>
+          </div>
+
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p class="muted">Versão demo — Frontend only • Dados guardados em localStorage</p>
+  </footer>
+
+  <template id="appointment-item-tpl">
+    <li class="appointment-item">
+      <div class="left">
+        <strong class="appt-type"></strong>
+        <div class="muted appt-meta"></div>
+      </div>
+      <div class="right">
+        <button class="btn small btn-edit">Editar</button>
+        <button class="btn small ghost btn-delete">Cancelar</button>
+      </div>
+    </li>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
